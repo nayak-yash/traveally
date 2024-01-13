@@ -9,7 +9,7 @@ RUN mvn clean package -DskipTests
 # Package stage
 #
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/Traveally-0.0.1-SNAPSHOT.jar Traveally.jar
+COPY --from=build /target/api-0.0.1-SNAPSHOT.jar api.jar
 # ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","Traveally.jar"]
+ENTRYPOINT ["java","-jar","api.jar"]
