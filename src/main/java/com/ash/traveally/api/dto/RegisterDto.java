@@ -8,5 +8,5 @@ public class RegisterDto {
     private String password;
     private String email;
     private String profileUrl;
-    private Long phoneNumber;
+    private String phoneNumber;
 }

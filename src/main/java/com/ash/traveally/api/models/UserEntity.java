@@ -19,7 +19,7 @@ public class UserEntity {
     private String password;
     private String email;
     private String profileUrl;
-    private Long phoneNumber;
+    private String phoneNumber;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
