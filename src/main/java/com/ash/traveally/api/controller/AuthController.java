@@ -3,12 +3,12 @@ package com.ash.traveally.api.controller;
 import com.ash.traveally.api.dto.AuthResponseDto;
 import com.ash.traveally.api.dto.LoginDto;
 import com.ash.traveally.api.dto.RegisterDto;
+import com.ash.traveally.api.dto.MessageDto;
 import com.ash.traveally.api.models.Role;
 import com.ash.traveally.api.models.UserEntity;
 import com.ash.traveally.api.repository.RoleRepository;
 import com.ash.traveally.api.repository.UserRepository;
 import com.ash.traveally.api.security.JwtGenerator;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,13 +42,13 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<MessageDto> register(@RequestBody RegisterDto registerDto) {
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            return new ResponseEntity<>("Email is already registered", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new MessageDto("User already registered!!"));
         }
         UserEntity user = mapToEntity(registerDto);
         userRepository.save(user);
-        return ResponseEntity.ok("User registered success!");
+        return ResponseEntity.ok(new MessageDto("User registered successfully!!"));
     }
 
     @PostMapping("login")
