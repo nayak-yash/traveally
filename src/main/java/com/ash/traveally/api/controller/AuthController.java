@@ -44,7 +44,13 @@ public class AuthController {
     @PostMapping("register")
     public ResponseEntity<MessageDto> register(@RequestBody RegisterDto registerDto) {
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageDto("User already registered!!"));
+            return ResponseEntity.badRequest().body(new MessageDto("Email already registered!!"));
+        }
+        if (userRepository.existsByUsername(registerDto.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageDto("Username already registered!!"));
+        }
+        if (userRepository.existsByPhoneNumber(registerDto.getPhoneNumber())) {
+            return ResponseEntity.badRequest().body(new MessageDto("Username already registered!!"));
         }
         UserEntity user = mapToEntity(registerDto);
         userRepository.save(user);
@@ -67,11 +73,16 @@ public class AuthController {
 
     private UserEntity mapToEntity(RegisterDto registerDto) {
         UserEntity user = new UserEntity();
-        user.setEmail(registerDto.getEmail());
+        user.setName(registerDto.getName());
         user.setUsername(registerDto.getUsername());
+        user.setEmail(registerDto.getEmail());
+        user.setPhoneNumber(registerDto.getPhoneNumber());
+        user.setCity(registerDto.getCity());
+        user.setCountry(registerDto.getCountry());
+        user.setBio(registerDto.getBio());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setPhoneNumber(registerDto.getPhoneNumber());
-        user.setProfileUrl(registerDto.getProfileUrl());
+        user.setPhotoUrl(registerDto.getPhotoUrl());
         Optional<Role> roles = roleRepository.findByName("USER");
         roles.ifPresent(role -> user.setRoles(Collections.singletonList(role)));
         return user;
