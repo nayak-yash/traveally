@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +70,11 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PostMapping("user")
+    public ResponseEntity<UserEntity> user() {
+        return ResponseEntity.ok(getUser(getUserEmail()));
+    }
+
     private UserEntity mapToEntity(RegisterDto registerDto) {
         UserEntity user = new UserEntity();
         user.setName(registerDto.getName());
@@ -84,5 +90,20 @@ public class AuthController {
         Optional<Role> roles = roleRepository.findByName("USER");
         roles.ifPresent(role -> user.setRoles(Collections.singletonList(role)));
         return user;
+    }
+
+    private String getUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return userDetails.getUsername();
+        }
+        return null;
+    }
+
+    private UserEntity getUser(String email) {
+        if (email != null) {
+            return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        }
+        return null;
     }
 }
