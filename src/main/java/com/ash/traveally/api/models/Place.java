@@ -1,5 +1,6 @@
 package com.ash.traveally.api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,5 +37,6 @@ public class Place {
 
     @ManyToOne
     @JoinColumn(name = "host_id")
+    @JsonBackReference
     private UserEntity host;
 }
