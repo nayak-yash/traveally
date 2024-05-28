@@ -19,7 +19,7 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-    @GetMapping("place")
+    @GetMapping("places")
     public ResponseEntity<List<PlaceDto>> getAllPlaces() {
         return ResponseEntity.ok(placeService.getAllPlace());
     }
