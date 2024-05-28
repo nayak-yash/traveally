@@ -50,7 +50,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageDto("Username already registered!!"));
         }
         if (userRepository.existsByPhoneNumber(registerDto.getPhoneNumber())) {
-            return ResponseEntity.badRequest().body(new MessageDto("Username already registered!!"));
+            return ResponseEntity.badRequest().body(new MessageDto("Phone number already registered!!"));
         }
         UserEntity user = mapToEntity(registerDto);
         userRepository.save(user);
@@ -65,9 +65,7 @@ public class AuthController {
         ));
         SecurityContextHolder.getContext().setAuthentication(auth);
         String token = jwtGenerator.generateToken(auth);
-        Integer userId = userRepository.findIdFromEmail(loginDto.getEmail()).orElseThrow(() ->
-        new UsernameNotFoundException("User doesn't exist"));
-        AuthResponseDto responseDto = new AuthResponseDto(token, userId);
+        AuthResponseDto responseDto = new AuthResponseDto(token);
         return ResponseEntity.ok(responseDto);
     }
 

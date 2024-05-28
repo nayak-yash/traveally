@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -15,25 +15,26 @@ import java.util.List;
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String title;
+    private Long id;
+    private String name;
+    private String city;
+    private String country;
     private String description;
-    private String address;
     private Integer price;
-    private Integer days;
-    private Integer nights;
-    private Integer maxGuest;
+    private Float rating;
+    private String placePhoto;
+    private String hotelPhoto;
+    private Boolean hasWifi;
+    private Boolean hasFood;
+    private Boolean hasTV;
+    private Boolean hasPool;
+    private Boolean hasSpa;
+    private Boolean hasLaundry;
 
     @ElementCollection
-    private List<String> perks = new ArrayList<>();
-
-    @ElementCollection
-    private List<String> urls = new ArrayList<>();
-
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    private Set<Long> likedIDs = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @JoinColumn(name = "host_id")
+    private UserEntity host;
 }

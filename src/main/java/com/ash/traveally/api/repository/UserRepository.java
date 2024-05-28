@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
 
     @Query("SELECT id FROM UserEntity WHERE email =:email")
-    Optional<Integer> findIdFromEmail(@Param("email") String email);
+    Optional<Long> findIdFromEmail(@Param("email") String email);
 
     Boolean existsByEmail(String email);
 
