@@ -1,11 +1,8 @@
 package com.ash.traveally.api.controller;
 
-import com.ash.traveally.api.dto.AuthResponseDto;
-import com.ash.traveally.api.dto.LoginDto;
-import com.ash.traveally.api.dto.RegisterDto;
-import com.ash.traveally.api.dto.MessageDto;
+import com.ash.traveally.api.dto.*;
 import com.ash.traveally.api.models.Role;
-import com.ash.traveally.api.models.UserEntity;
+import com.ash.traveally.api.models.User;
 import com.ash.traveally.api.repository.RoleRepository;
 import com.ash.traveally.api.repository.UserRepository;
 import com.ash.traveally.api.security.JwtGenerator;
@@ -50,7 +47,7 @@ public class AuthController {
         if (userRepository.existsByPhoneNumber(registerDto.getPhoneNumber())) {
             return ResponseEntity.badRequest().body(new MessageDto("Phone number already registered!!"));
         }
-        UserEntity user = mapToEntity(registerDto);
+        User user = mapToEntity(registerDto);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageDto("User registered successfully!!"));
     }
@@ -67,13 +64,18 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("user")
-    public ResponseEntity<UserEntity> user() {
-        return ResponseEntity.ok(getUser(getUserEmail()));
+    @GetMapping("user/{userId}")
+    public ResponseEntity<UserDto> user(@PathVariable Long userId) {
+        return ResponseEntity.ok(mapToDto(getUser(getUserEmail())));
     }
 
-    private UserEntity mapToEntity(RegisterDto registerDto) {
-        UserEntity user = new UserEntity();
+    @GetMapping("user")
+    public ResponseEntity<UserDto> user() {
+        return ResponseEntity.ok(mapToDto(getUser(getUserEmail())));
+    }
+
+    private User mapToEntity(RegisterDto registerDto) {
+        User user = new User();
         user.setName(registerDto.getName());
         user.setUsername(registerDto.getUsername());
         user.setEmail(registerDto.getEmail());
@@ -89,6 +91,19 @@ public class AuthController {
         return user;
     }
 
+    private UserDto mapToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setName(user.getName());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setCity(user.getCity());
+        userDto.setCountry(user.getCountry());
+        userDto.setBio(user.getBio());
+        userDto.setPhotoUrl(user.getPhotoUrl());
+        return userDto;
+    }
+
     private String getUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
@@ -97,7 +112,7 @@ public class AuthController {
         return null;
     }
 
-    private UserEntity getUser(String email) {
+    private User getUser(String email) {
         if (email != null) {
             return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         }

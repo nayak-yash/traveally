@@ -1,11 +1,10 @@
 package com.ash.traveally.api.security;
 
 import com.ash.traveally.api.models.Role;
-import com.ash.traveally.api.models.UserEntity;
+import com.ash.traveally.api.models.User;
 import com.ash.traveally.api.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,8 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
-        return new User(userEntity.getEmail(), userEntity.getPassword(), mapRolesToAuthority(userEntity.getRoles()));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthority(user.getRoles()));
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthority(List<Role> roles) {

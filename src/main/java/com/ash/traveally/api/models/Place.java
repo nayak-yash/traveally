@@ -38,5 +38,5 @@ public class Place {
     @ManyToOne
     @JoinColumn(name = "host_id")
     @JsonBackReference
-    private UserEntity host;
+    private User host;
 }
