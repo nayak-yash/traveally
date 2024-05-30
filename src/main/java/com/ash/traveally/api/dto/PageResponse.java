@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PlaceResponse {
-    private List<PlaceDto> content;
+public class PageResponse<T> {
+    private List<T> content;
     private Integer pageNo;
     private Integer pageSize;
     private long totalElements;

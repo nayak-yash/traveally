@@ -16,10 +16,22 @@ public class GlobalExceptionHandler {
             PlaceNotFoundException e,
             WebRequest request
     ) {
-     ErrorObject errorObject = new ErrorObject();
-     errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
-     errorObject.setMessage(e.getMessage());
-     errorObject.setTimestamp(new Date());
-     return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(e.getMessage());
+        errorObject.setTimestamp(new Date());
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BlogNotFoundException.class)
+    public ResponseEntity<ErrorObject> handlePlaceNotFoundException(
+            BlogNotFoundException e,
+            WebRequest request
+    ) {
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(e.getMessage());
+        errorObject.setTimestamp(new Date());
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
 }

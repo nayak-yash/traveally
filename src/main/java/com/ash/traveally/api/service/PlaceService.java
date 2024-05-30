@@ -1,7 +1,7 @@
 package com.ash.traveally.api.service;
 
+import com.ash.traveally.api.dto.PageResponse;
 import com.ash.traveally.api.dto.PlaceDto;
-import com.ash.traveally.api.dto.PlaceResponse;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ public interface PlaceService {
 
     PlaceDto createPlace(PlaceDto placeDto);
 
-    List<PlaceDto> getAllPlace();
+    List<PlaceDto> getAllPlaces();
 
-    PlaceResponse getAllPlace(int pageNo, int pageSize);
+    PageResponse<PlaceDto> getAllPlaces(int pageNo, int pageSize);
 
     PlaceDto getPlace(Long id);
 

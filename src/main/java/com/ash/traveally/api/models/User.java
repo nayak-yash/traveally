@@ -17,9 +17,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
     private Long phoneNumber;
+
     private String city;
     private String country;
     private String bio;
@@ -36,4 +43,8 @@ public class User {
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     private List<Place> places = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Blog> blogs = new ArrayList<>();
 }

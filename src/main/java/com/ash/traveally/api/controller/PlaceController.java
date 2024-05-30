@@ -1,8 +1,8 @@
 package com.ash.traveally.api.controller;
 
 
+import com.ash.traveally.api.dto.PageResponse;
 import com.ash.traveally.api.dto.PlaceDto;
-import com.ash.traveally.api.dto.PlaceResponse;
 import com.ash.traveally.api.service.PlaceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +21,15 @@ public class PlaceController {
 
     @GetMapping("places")
     public ResponseEntity<List<PlaceDto>> getAllPlaces() {
-        return ResponseEntity.ok(placeService.getAllPlace());
+        return ResponseEntity.ok(placeService.getAllPlaces());
     }
 
     @GetMapping("place")
-    public ResponseEntity<PlaceResponse> getPlaces(
+    public ResponseEntity<PageResponse<PlaceDto>> getPlaces(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
-        return ResponseEntity.ok(placeService.getAllPlace(pageNo, pageSize));
+        return ResponseEntity.ok(placeService.getAllPlaces(pageNo, pageSize));
     }
 
     @GetMapping("place/{placeId}")
@@ -47,7 +47,7 @@ public class PlaceController {
         return ResponseEntity.ok(placeService.updatePlace(placeDto));
     }
 
-    @DeleteMapping("place/{placeId}/delete")
+    @DeleteMapping("place/delete/{placeId}")
     public ResponseEntity<String> deletePlace(@PathVariable Long placeId) {
         placeService.deletePlace(placeId);
         return ResponseEntity.ok("Deleted Successfully");

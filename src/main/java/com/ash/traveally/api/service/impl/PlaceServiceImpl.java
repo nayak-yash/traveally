@@ -1,18 +1,16 @@
 package com.ash.traveally.api.service.impl;
 
+import com.ash.traveally.api.dto.PageResponse;
 import com.ash.traveally.api.dto.PlaceDto;
-import com.ash.traveally.api.dto.PlaceResponse;
 import com.ash.traveally.api.exceptions.PlaceNotFoundException;
 import com.ash.traveally.api.models.Place;
 import com.ash.traveally.api.repository.PlaceRepository;
 import com.ash.traveally.api.repository.UserRepository;
+import com.ash.traveally.api.security.CustomUserDetailsService;
 import com.ash.traveally.api.service.PlaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -38,18 +36,18 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDto> getAllPlace() {
+    public List<PlaceDto> getAllPlaces() {
         List<Place> places = placeRepository.findAll();
         return places.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
-    public PlaceResponse getAllPlace(int pageNo, int pageSize) {
+    public PageResponse<PlaceDto> getAllPlaces(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Place> page = placeRepository.findAll(pageable);
         List<Place> places = page.getContent();
         List<PlaceDto> content = places.stream().map(this::mapToDto).collect(Collectors.toList());
-        PlaceResponse placeResponse = new PlaceResponse();
+        PageResponse<PlaceDto> placeResponse = new PageResponse<>();
         placeResponse.setContent(content);
         placeResponse.setPageNo(page.getNumber());
         placeResponse.setPageSize(page.getSize());
@@ -85,16 +83,8 @@ public class PlaceServiceImpl implements PlaceService {
         placeRepository.deleteById(id);
     }
 
-    private String getUserEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
-            return userDetails.getUsername();
-        }
-        return null;
-    }
-
     public Long getUserId() {
-        return userRepository.findIdFromEmail(getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
+        return userRepository.findIdFromEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
     }
 
     private PlaceDto mapToDto(Place place) {
@@ -136,7 +126,7 @@ public class PlaceServiceImpl implements PlaceService {
         place.setHasPool(placeDto.getHasPool());
         place.setHasSpa(placeDto.getHasSpa());
         place.setHasLaundry(placeDto.getHasLaundry());
-        place.setHost(userRepository.findByEmail(getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
+        place.setHost(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
         if (placeDto.getId() != null) {
             Place temp = placeRepository.findById(placeDto.getId()).get();
             Set<Long> likedIds = temp.getLikedIDs();
