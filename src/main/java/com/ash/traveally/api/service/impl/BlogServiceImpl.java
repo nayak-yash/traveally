@@ -70,6 +70,9 @@ public class BlogServiceImpl implements BlogService {
         if (!blogRepository.existsById(blogDto.getId())) {
             throw new BlogNotFoundException("Blog cannot be updated");
         }
+        if (!blogDto.getAuthorId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
+            throw new BlogNotFoundException("Blog cannot be updated");
+        }
         Blog updatedBlog = mapToEntity(blogDto);
         Blog newBlog = blogRepository.save(updatedBlog);
         return mapToDto(newBlog);
@@ -78,6 +81,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void deleteBlog(Long id) {
         if (!blogRepository.existsById(id)) {
+            throw new BlogNotFoundException("Blog cannot be deleted");
+        }
+        if (!blogRepository.findById(id).get().getAuthor().getId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
             throw new BlogNotFoundException("Blog cannot be deleted");
         }
         blogRepository.deleteById(id);
@@ -99,6 +105,7 @@ public class BlogServiceImpl implements BlogService {
         blogDto.setTime(blog.getTime());
         blogDto.setAuthorId(blog.getAuthor().getId());
         blogDto.setIsFavourite(blog.getLikedIDs().contains(getUserId()));
+        blogDto.setLikes(blog.getLikedIDs().size());
         return blogDto;
     }
 

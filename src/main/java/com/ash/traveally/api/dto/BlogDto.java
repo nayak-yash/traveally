@@ -12,6 +12,7 @@ public class BlogDto {
     private String description;
     private Boolean isFavourite;
     private String placePhoto;
+    private Integer likes;
     private Long time;
     private Long authorId;
 }
