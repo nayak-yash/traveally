@@ -70,9 +70,6 @@ public class PlaceServiceImpl implements PlaceService {
         if (!placeRepository.existsById(placeDto.getId())) {
             throw new PlaceNotFoundException("Place cannot be updated");
         }
-        if (!placeDto.getHostId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
-            throw new PlaceNotFoundException("Place cannot be updated");
-        }
         Place updatedPlace = mapToEntity(placeDto);
         Place newPlace = placeRepository.save(updatedPlace);
         return mapToDto(newPlace);

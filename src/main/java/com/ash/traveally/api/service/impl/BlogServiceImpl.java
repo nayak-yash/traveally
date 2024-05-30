@@ -72,9 +72,6 @@ public class BlogServiceImpl implements BlogService {
         if (!blogRepository.existsById(blogDto.getId())) {
             throw new BlogNotFoundException("Blog cannot be updated");
         }
-        if (!blogDto.getAuthor().getId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
-            throw new BlogNotFoundException("Blog cannot be updated");
-        }
         Blog updatedBlog = mapToEntity(blogDto);
         Blog newBlog = blogRepository.save(updatedBlog);
         return mapToDto(newBlog);
