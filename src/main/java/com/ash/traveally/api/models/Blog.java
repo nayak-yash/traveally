@@ -28,6 +28,9 @@ public class Blog {
     @ElementCollection
     private Set<Long> likedIDs = new HashSet<>();
 
+    @ElementCollection
+    private Set<Long> savedIDs = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     @JsonBackReference

@@ -11,6 +11,7 @@ public class BlogDto {
     private String introduction;
     private String description;
     private Boolean isFavourite;
+    private Boolean isSaved;
     private String placePhoto;
     private Integer likes;
     private Long time;

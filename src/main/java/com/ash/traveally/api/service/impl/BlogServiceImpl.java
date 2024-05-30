@@ -104,6 +104,7 @@ public class BlogServiceImpl implements BlogService {
         blogDto.setTime(blog.getTime());
         blogDto.setAuthor(mapToDto(blog.getAuthor()));
         blogDto.setIsFavourite(blog.getLikedIDs().contains(getUserId()));
+        blogDto.setIsSaved(blog.getSavedIDs().contains(getUserId()));
         blogDto.setLikes(blog.getLikedIDs().size());
         return blogDto;
     }
@@ -122,9 +123,13 @@ public class BlogServiceImpl implements BlogService {
         if (blogDto.getId() != null) {
             Blog temp = blogRepository.findById(blogDto.getId()).get();
             Set<Long> likedIds = temp.getLikedIDs();
+            Set<Long> savedIds = temp.getSavedIDs();
             if (blogDto.getIsFavourite()) likedIds.add(getUserId());
             else likedIds.remove(getUserId());
+            if (blogDto.getIsSaved()) savedIds.add(getUserId());
+            else savedIds.remove(getUserId());
             blog.setLikedIDs(likedIds);
+            blog.setSavedIDs(savedIds);
         }
         return blog;
     }
