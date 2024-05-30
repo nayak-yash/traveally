@@ -92,6 +92,7 @@ public class AuthController {
 
     private UserDto mapToDto(User user) {
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());

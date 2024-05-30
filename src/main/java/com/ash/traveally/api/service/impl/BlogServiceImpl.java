@@ -2,8 +2,10 @@ package com.ash.traveally.api.service.impl;
 
 import com.ash.traveally.api.dto.PageResponse;
 import com.ash.traveally.api.dto.BlogDto;
+import com.ash.traveally.api.dto.UserDto;
 import com.ash.traveally.api.exceptions.BlogNotFoundException;
 import com.ash.traveally.api.models.Blog;
+import com.ash.traveally.api.models.User;
 import com.ash.traveally.api.repository.BlogRepository;
 import com.ash.traveally.api.repository.UserRepository;
 import com.ash.traveally.api.security.CustomUserDetailsService;
@@ -70,7 +72,7 @@ public class BlogServiceImpl implements BlogService {
         if (!blogRepository.existsById(blogDto.getId())) {
             throw new BlogNotFoundException("Blog cannot be updated");
         }
-        if (!blogDto.getAuthorId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
+        if (!blogDto.getAuthor().getId().equals(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId())) {
             throw new BlogNotFoundException("Blog cannot be updated");
         }
         Blog updatedBlog = mapToEntity(blogDto);
@@ -103,7 +105,7 @@ public class BlogServiceImpl implements BlogService {
         blogDto.setDescription(blog.getDescription());
         blogDto.setPlacePhoto(blog.getPlacePhoto());
         blogDto.setTime(blog.getTime());
-        blogDto.setAuthorId(blog.getAuthor().getId());
+        blogDto.setAuthor(mapToDto(blog.getAuthor()));
         blogDto.setIsFavourite(blog.getLikedIDs().contains(getUserId()));
         blogDto.setLikes(blog.getLikedIDs().size());
         return blogDto;
@@ -128,5 +130,19 @@ public class BlogServiceImpl implements BlogService {
             blog.setLikedIDs(likedIds);
         }
         return blog;
+    }
+
+    private UserDto mapToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setCity(user.getCity());
+        userDto.setCountry(user.getCountry());
+        userDto.setBio(user.getBio());
+        userDto.setPhotoUrl(user.getPhotoUrl());
+        return userDto;
     }
 }

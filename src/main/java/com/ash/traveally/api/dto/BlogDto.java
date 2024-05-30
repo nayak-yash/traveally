@@ -14,5 +14,5 @@ public class BlogDto {
     private String placePhoto;
     private Integer likes;
     private Long time;
-    private Long authorId;
+    private UserDto author;
 }
