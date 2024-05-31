@@ -1,5 +1,6 @@
 package com.ash.traveally.api.service.impl;
 
+import com.ash.traveally.api.models.User;
 import com.ash.traveally.api.repository.UserRepository;
 import com.ash.traveally.api.service.ChatService;
 import org.springframework.security.core.Authentication;
@@ -30,15 +31,31 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public String addChat(Long userId) {
-        userRepository.findByEmail(getUserEmail()).get().getChatIds().add(userId);
-        userRepository.findById(userId).get().getChatIds().add(userRepository.findIdFromEmail(getUserEmail()).get());
+        User sender = userRepository.findByEmail(getUserEmail()).get();
+        User receiver = userRepository.findById(userId).get();
+        Set<Long> senderChatIds = sender.getChatIds();
+        senderChatIds.add(userId);
+        sender.setChatIds(senderChatIds);
+        Set<Long> receiverChatIds = receiver.getChatIds();
+        receiverChatIds.add(userId);
+        receiver.setChatIds(receiverChatIds);
+        userRepository.save(sender);
+        userRepository.save(receiver);
         return "Added Successfully";
     }
 
     @Override
     public String deleteChat(Long userId) {
-        userRepository.findByEmail(getUserEmail()).get().getChatIds().remove(userId);
-        userRepository.findById(userId).get().getChatIds().remove(userRepository.findIdFromEmail(getUserEmail()).get());
+        User sender = userRepository.findByEmail(getUserEmail()).get();
+        User receiver = userRepository.findById(userId).get();
+        Set<Long> senderChatIds = sender.getChatIds();
+        senderChatIds.remove(userId);
+        sender.setChatIds(senderChatIds);
+        Set<Long> receiverChatIds = receiver.getChatIds();
+        receiverChatIds.remove(userId);
+        receiver.setChatIds(receiverChatIds);
+        userRepository.save(sender);
+        userRepository.save(receiver);
         return "Deleted Successfully";
     }
 
