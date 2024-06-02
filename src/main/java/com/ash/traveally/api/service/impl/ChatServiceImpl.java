@@ -26,7 +26,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Set<Long> searchUser(String query) {
-        return userRepository.findUserIdsByNameOrUsernameStartingWith(query);
+        return userRepository.searchUser(query);
     }
 
     @Override

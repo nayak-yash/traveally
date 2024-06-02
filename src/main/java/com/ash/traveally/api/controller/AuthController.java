@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,12 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PutMapping("user")
+    public ResponseEntity<UserDto> user(@RequestBody UserDto userDto) {
+        User user = userRepository.save(mapToEntity(userDto));
+        return ResponseEntity.ok(mapToDto(user));
+    }
+
     @GetMapping("user/{userId}")
     public ResponseEntity<UserDto> user(@PathVariable Long userId) {
         return ResponseEntity.ok(mapToDto(userRepository.findById(userId).get()));
@@ -71,6 +78,25 @@ public class AuthController {
     @GetMapping("user")
     public ResponseEntity<UserDto> user() {
         return ResponseEntity.ok(mapToDto(userRepository.findByEmail(getUserEmail()).get()));
+    }
+
+
+    private User mapToEntity(UserDto userDto) {
+        Long id = userDto.getId();
+        if (!userRepository.existsById(id)) {
+            throw new UsernameNotFoundException("User doesn't exist");
+        }
+        User user = userRepository.findById(id).get();
+        user.setName(userDto.getName());
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setCity(userDto.getCity());
+        user.setCountry(userDto.getCountry());
+        user.setBio(userDto.getBio());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setPhotoUrl(userDto.getPhotoUrl());
+        return userRepository.save(user);
     }
 
     private User mapToEntity(RegisterDto registerDto) {

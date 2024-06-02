@@ -15,8 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT id FROM User WHERE email =:email")
     Optional<Long> findIdFromEmail(@Param("email") String email);
 
-    @Query("SELECT u.id FROM User u WHERE u.name LIKE :query% OR u.username LIKE :query%")
-    Set<Long> findUserIdsByNameOrUsernameStartingWith(@Param("query") String query);
+    @Query(value = "SELECT u.id FROM User u WHERE u.name ILIKE %:query% OR u.username ILIKE %:query%", nativeQuery = true)
+    Set<Long> searchUser(@Param("query") String query);
 
     Boolean existsByEmail(String email);
 
