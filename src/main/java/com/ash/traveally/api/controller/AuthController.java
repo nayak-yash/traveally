@@ -64,19 +64,19 @@ public class AuthController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PutMapping("user")
-    public ResponseEntity<UserDto> user(@RequestBody UserDto userDto) {
+    @PutMapping("user/update")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         User user = userRepository.save(mapToEntity(userDto));
         return ResponseEntity.ok(mapToDto(user));
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<UserDto> user(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(mapToDto(userRepository.findById(userId).get()));
     }
 
     @GetMapping("user")
-    public ResponseEntity<UserDto> user() {
+    public ResponseEntity<UserDto> getUser() {
         return ResponseEntity.ok(mapToDto(userRepository.findByEmail(getUserEmail()).get()));
     }
 
