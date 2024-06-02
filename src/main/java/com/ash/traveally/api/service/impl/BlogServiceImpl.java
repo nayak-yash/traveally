@@ -33,6 +33,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDto createBlog(BlogDto blogDto) {
         Blog blog = mapToEntity(blogDto);
+        blog.setTime(blogDto.getTime());
+        blog.setAuthor(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
         Blog newBlog = blogRepository.save(blog);
         return mapToDto(newBlog);
     }
@@ -118,8 +120,6 @@ public class BlogServiceImpl implements BlogService {
         blog.setIntroduction(blogDto.getIntroduction());
         blog.setDescription(blogDto.getDescription());
         blog.setPlacePhoto(blogDto.getPlacePhoto());
-        blog.setTime(blogDto.getTime());
-        blog.setAuthor(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
         if (blogDto.getId() != null) {
             Blog temp = blogRepository.findById(blogDto.getId()).get();
             Set<Long> likedIds = temp.getLikedIDs();

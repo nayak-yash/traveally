@@ -31,6 +31,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public PlaceDto createPlace(PlaceDto placeDto) {
         Place place = mapToEntity(placeDto);
+        place.setHost(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
         Place newPlace = placeRepository.save(place);
         return mapToDto(newPlace);
     }
@@ -129,7 +130,6 @@ public class PlaceServiceImpl implements PlaceService {
         place.setHasPool(placeDto.getHasPool());
         place.setHasSpa(placeDto.getHasSpa());
         place.setHasLaundry(placeDto.getHasLaundry());
-        place.setHost(userRepository.findByEmail(CustomUserDetailsService.getUserEmail()).orElseThrow(() -> new UsernameNotFoundException("Host doesn't exist")));
         if (placeDto.getId() != null) {
             Place temp = placeRepository.findById(placeDto.getId()).get();
             Set<Long> likedIds = temp.getLikedIDs();

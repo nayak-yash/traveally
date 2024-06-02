@@ -21,8 +21,9 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getAllChats());
     }
 
-    @GetMapping("chats/{query}")
-    public ResponseEntity<Set<Long>> searchUser(@PathVariable String query) {
+    @GetMapping("chats/search")
+    public ResponseEntity<Set<Long>> searchUser(@RequestParam(name = "query") String query) {
+        System.out.println(query);
         return ResponseEntity.ok(chatService.searchUser(query));
     }
 
