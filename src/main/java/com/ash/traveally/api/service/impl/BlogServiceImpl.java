@@ -112,8 +112,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     private Blog mapToEntity(BlogDto blogDto)  {
-        Blog blog = new Blog();
-        if (blogDto.getId() != null) blog.setId(blogDto.getId());
+        Blog blog;
+        if (blogDto.getId() != null) {
+            blog = blogRepository.findById(blogDto.getId()).get();
+        } else {
+            blog = new Blog();
+        }
         blog.setCity(blogDto.getCity());
         blog.setCountry(blogDto.getCountry());
         blog.setTitle(blogDto.getTitle());
