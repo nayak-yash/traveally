@@ -23,7 +23,6 @@ public class ChatController {
 
     @GetMapping("chats/search")
     public ResponseEntity<Set<Long>> searchUser(@RequestParam(name = "query") String query) {
-        System.out.println(query);
         return ResponseEntity.ok(chatService.searchUser(query));
     }
 
